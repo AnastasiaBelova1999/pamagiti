@@ -22,12 +22,13 @@ class User(flask_login.UserMixin):
 @login_manager.user_loader
 def user_loader(login):
     cursor = db.db.cursor(named_tuple=True)
-    cursor.execute('select id, login from users where id = %s', (login,))
+    cursor.execute('select id, login, roles_id from users where id = %s', (login,))
     user_db = cursor.fetchone()
     if user_db:
         user = User()
         user.id = user_db.id
         user.login = user_db.login
+        user.roles_id = user_db.roles_id
         return user
     return None
 
@@ -52,7 +53,7 @@ def hello_world():
             cursor = db.db.cursor(named_tuple=True, buffered=True)
             try:
                 cursor.execute(
-                    "SELECT id,login FROM users WHERE `login` = '%s' and `password_hash` = '%s'" % (
+                    "SELECT id,login,roles_id FROM users WHERE `login` = '%s' and `password_hash` = '%s'" % (
                         username, password_hash))
                 user = cursor.fetchone()
             except Exception:
@@ -65,8 +66,9 @@ def hello_world():
                 flask_user.id = user.id
                 flask_user.login = user.login
                 flask_login.login_user(flask_user, remember=True)
+                flask_user.roles_id = user.roles_id
                 return render_template("index.html", authorization=not flask_login.current_user.is_anonymous,
-                                       login=user.login, login_false=False)
+                                       login=user.login, login_false=False, roles_id=flask_login.current_user.roles_id)
             else:
                 flash("Не правильный логин или пароль")
                 return render_template("index.html", authorization=False,
@@ -89,9 +91,11 @@ def req():
     requests = db.select(None, "requests")
     date = db.select("date", "requests")
     login = dict(db.select(["id","login"], "users"))
+    roles_id = flask_login.current_user.roles_id
     support = dict(db.select(["id", "title"], "support"))
     status = dict(db.select(["id","title"], "status"))
-    return render_template("req.html", requests=requests, date=date, login=login, support=support, status=status)
+    return render_template("req.html", requests=requests, date=date, login=login, support=support, status=status,
+                           authorization=not flask_login.current_user.is_anonymous, roles_id=roles_id)
 
 @app.route('/req/delete', methods=['POST'])
 @login_required
@@ -128,12 +132,12 @@ def sub_new():
                 support = db.select(["id", "title"], "support")
                 status = db.select(["id", "title"], "status")
                 return render_template("new.html", login=flask_login.current_user.login, insert_false=True, support=support,
-                                       status=status)
+                                       status=status, authorization=not flask_login.current_user.is_anonymous)
         else:
             support = db.select(["id", "title"], "support")
             status = db.select(["id", "title"], "status")
             return render_template("new.html", login=flask_login.current_user.login, insert_false=True, support=support,
-                                   status=status)
+                                   status=status, authorization=not flask_login.current_user.is_anonymous)
 
 @app.route('/req/edit', methods=['POST'])
 @login_required

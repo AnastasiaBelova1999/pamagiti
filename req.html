@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+ {% if authorization %}
+      <li class="nav-item">
+        <a class="nav-link" href="/req">Список обращений</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/req/new">Добавить обращение</a>
+      </li>
+        {% endif %}
+    </ul>
+        {% if authorization %}
+      <h4 class="text-white mr-3">{{ login_user }}</h4>
+      <a href="logout"><button type="button" class="btn btn-light">Выйти</button></a>
+        {% endif %}
+{% block content %}
+
+    <div class="d-flex justify-content-center">
+	<div class="content text-center">
+
+        <h2 class="text-center mb-5">Список обращений</h2>
+        <table class="table text-center">
+            <thead>
+             <tr>
+                 <th scope="col">Дата</th>
+                <th scope="col">Логин</th>
+                 <th scope="col">Состояние</th>
+                 <th scope="col">Статус</th>
+             </tr>
+  </thead>
+  <tbody>
+  {% for req in requests %}
+  <tr>
+      <td>{{ req.date}}</td>
+      <td>{{ login[req.id_login]}}</td>
+      <td>{{ support[req.id_support]}}</td>
+      <td>{{ status[req.id_status]}}</td>
+
+      {% if roles_id in [1]%}
+       <td><form action="/req/delete" method="POST">
+                        <input type = "hidden" name="id" value="{{ req.id }}">
+                        <input type="hidden" name="date" value="{{ req.date}}">
+                        <input type="hidden" name="login" value="{{ req.id_login}}">
+                        <input type="hidden" name="id_support" value="{{ req.id_support}}">
+                        <input type="hidden" name="id_status" value="{{ req.id_status }}">
+						<button type="hidden" class="btn btn-primary">delete</button>
+  </form></td>
+      {% endif %}
+      {% if roles_id in [1,2]%}
+        <td><form action="/req/edit" method="POST">
+                        <input type = "hidden" name="id" value="{{ req.id }}">
+                        <input type="hidden" name="date" value="{{ req.date}}">
+                        <input type="hidden" name="login" value="{{ req.id_login}}">
+                        <input type="hidden" name="id_support" value="{{ req.id_support}}">
+                        <input type="hidden" name="id_status" value="{{ req.id_status }}">
+						<button type="hidden" class="btn btn-primary">edit</button>
+  </form></td>
+       {% endif %}
+  </tr>
+  {% endfor %}
+  </tbody>
+        </table>
+    </div>
+    </div>
+{% endblock %}
