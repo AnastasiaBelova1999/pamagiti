@@ -41,10 +41,10 @@ def hello_world():
     if request.method == 'GET':
         login: str
         if flask_login.current_user.is_anonymous:
-            login = "anonymus"
+            login_user = "anonymus"
         else:
-            login = flask_login.current_user.login
-        return render_template("index.html", authorization=not flask_login.current_user.is_anonymous, login=login)
+            login_user = flask_login.current_user.login
+        return render_template("index.html", authorization=not flask_login.current_user.is_anonymous, login_user=login_user)
     elif request.method == 'POST':
         username = request.form.get("username")
         password = request.form.get("password")
@@ -95,7 +95,8 @@ def req():
     support = dict(db.select(["id", "title"], "support"))
     status = dict(db.select(["id","title"], "status"))
     return render_template("req.html", requests=requests, date=date, login=login, support=support, status=status,
-                           authorization=not flask_login.current_user.is_anonymous, roles_id=roles_id)
+                           authorization=not flask_login.current_user.is_anonymous, roles_id=roles_id,
+                           login_user=flask_login.current_user.login)
 
 @app.route('/req/delete', methods=['POST'])
 @login_required

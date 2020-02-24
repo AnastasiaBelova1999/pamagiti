@@ -34,6 +34,8 @@
       <td>{{ login[req.id_login]}}</td>
       <td>{{ support[req.id_support]}}</td>
       <td>{{ status[req.id_status]}}</td>
+
+      {% if roles_id in [1]%}
        <td><form action="/req/delete" method="POST">
                         <input type = "hidden" name="id" value="{{ req.id }}">
                         <input type="hidden" name="date" value="{{ req.date}}">
@@ -42,6 +44,8 @@
                         <input type="hidden" name="id_status" value="{{ req.id_status }}">
 						<button type="hidden" class="btn btn-primary">delete</button>
   </form></td>
+      {% endif %}
+      {% if roles_id in [1,2]%}
         <td><form action="/req/edit" method="POST">
                         <input type = "hidden" name="id" value="{{ req.id }}">
                         <input type="hidden" name="date" value="{{ req.date}}">
@@ -50,6 +54,7 @@
                         <input type="hidden" name="id_status" value="{{ req.id_status }}">
 						<button type="hidden" class="btn btn-primary">edit</button>
   </form></td>
+       {% endif %}
   </tr>
   {% endfor %}
   </tbody>

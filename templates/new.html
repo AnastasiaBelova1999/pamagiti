@@ -1,5 +1,17 @@
 {% extends "base.html" %}
-
+{% if authorization %}
+      <li class="nav-item">
+        <a class="nav-link" href="/req">Список обращений</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/req/new">Добавить обращение</a>
+      </li>
+        {% endif %}
+    </ul>
+        {% if authorization %}
+      <h4 class="text-white mr-3">{{ login_user }}</h4>
+      <a href="logout"><button type="button" class="btn btn-light">Выйти</button></a>
+        {% endif %}
 {% block content %}
 <div class="col-md-4 my-4 border border-white rounded container text-center" id="main">
 
