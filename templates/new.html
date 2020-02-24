@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="col-md-4 my-4 border border-white rounded container text-center" id="main">
+
+    <div class="container text-center">
+        <form class='form' method="post" action="/req/new">
+
+            <div class="form-group">
+                <label for="date">Дата</label>
+                <input type="date" class="form-control" id="date" placeholder="date" name="date" value="{{ date }}">
+            </div>
+
+
+            <div class="form-group">
+                <label for="id_support">Состояние</label>
+                <select name = "id_support">
+                    {% for supor in support %}
+                     <option value={{ supor.id }}>{{ supor.title }}</option>
+                     {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="id_status">Статус обращения</label>
+                <select name = "id_status">
+                    {% for stat in status %}
+                     <option value={{ stat.id }}>{{ stat.title }}</option>
+                     {% endfor %}
+                </select>
+            </div>
+
+            <input type="hidden" value="{{ id }}" name = "older_id">
+             <input type=submit class='btn btn-success' value='Добавить'>
+        </form>
+    </div>
+</div>
+<thead>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false" id ="error_insert">
+  <div class="toast-header">
+    <strong class="mr-auto">ADMIN</strong>
+    <small>Когда то давно</small>
+    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="toast-body">
+    Что то не так проверьте данные или попробуйте позже
+  </div>
+</div>
+</body>
+{% if insert_false %}
+<script>
+    $('#error_insert').toast('show')
+</script>
+{% endif %}
+{% endblock %}

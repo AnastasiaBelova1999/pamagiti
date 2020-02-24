@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+	<div class="content">
+
+	<h2 class="text-center mb-5">Главная страница</h2>
+       {% if not authorization %}
+	    <h4 class="text-center">Login</h4>
+         <div class="col-md-4 my-4 border border-white rounded container text-center" id="main">
+
+    <div class="container text-center">
+        <form class='form' method="post" action="/">
+            <p><input type=text class='form-control mt-2' placeholder='username' name='username'>
+                <p><input type=password class='form-control mt-2' placeholder='password' name='password'>
+                    <p><input type=submit class='btn btn-primary' value='Войти'>
+        </form>
+        {% endif %}
+
+    </div>
+    <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false" id ="error_login">
+  <div class="toast-header">
+    <strong class="mr-auto">ADMIN</strong>
+    <small>Сейчас:</small>
+    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="toast-body">
+    Вы ввели не правильный логин или пароль
+  </div>
+</div>
+</div>
+    </div>
+</body>
+{% if login_false %}
+    <script>
+    #вызов_уведомления
+    $('#error_login').toast('show')
+
+</script>
+{% endif %}
+
+{% endblock %}
